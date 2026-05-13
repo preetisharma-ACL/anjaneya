@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "figma-implement-design": {
+      "source": "figma/mcp-server-guide",
+      "sourceType": "github",
+      "skillPath": "skills/figma-implement-design/SKILL.md",
+      "computedHash": "adad024a37deea876a5ef9572e16224dc85d88fe0d8451773c75d55e9ea0d854"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "516bd2154eb843a8240e43d5b285229129853114ad7075a5e141e1c08e408c84"
+    },
+    "shadcn": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "f0fdd03f4755cbb3b57e20fe6fd4a97c00d34e6780187b6559316986e8d848db"
+    }
+  }
+}
