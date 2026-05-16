@@ -52,7 +52,7 @@ export function ProjectCard({ id, category, title, location, tagline, image }: P
 
         {/* Content Section - Figma Positioning: y: 248 */}
         {/* Content Section */}
-        <div className="px-24 pt-16 pb-24 flex flex-col gap-12 flex-1">
+        <div className="px-24 pt-16 pr-24 pb-90 flex flex-col gap-12 flex-1">
           <div className="flex flex-col gap-12">
             <h3 className="text-primary text-xl font-medium leading-tight break-words">
               {title}
@@ -72,7 +72,7 @@ export function ProjectCard({ id, category, title, location, tagline, image }: P
 
         {/* Arrow Button - Bottom Right Position */}
         <div
-          className="group absolute bottom-20 right-20 z-10 rounded-full flex items-center justify-center cursor-pointer"
+          className="group absolute bottom-24 right-24 z-10 rounded-full flex items-center justify-center cursor-pointer"
         >
           <Button
             variant="primary"
