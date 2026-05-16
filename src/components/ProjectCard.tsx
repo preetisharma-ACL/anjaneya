@@ -20,7 +20,7 @@ export function ProjectCard({ id, category, title, location, tagline, image }: P
         initial="rest"
         whileHover="hover"
         animate="rest"
-        className="relative w-full h-[410px] bg-surface-white rounded-xl-24 overflow-hidden transition-shadow duration-300"
+        className="relative w-full min-h-[410px] bg-surface-white rounded-xl-24 overflow-hidden transition-shadow duration-300 flex flex-col"
         style={{
           boxShadow:
             "0px 100px 80px 0px rgba(0, 0, 0, 0.02), 0px 64.81px 46.85px 0px rgba(0, 0, 0, 0.02), 0px 38.52px 25.48px 0px rgba(0, 0, 0, 0.01), 0px 20px 13px 0px rgba(0, 0, 0, 0.01), 0px 8.15px 6.52px 0px rgba(0, 0, 0, 0.01)",
@@ -51,16 +51,19 @@ export function ProjectCard({ id, category, title, location, tagline, image }: P
         </div>
 
         {/* Content Section - Figma Positioning: y: 248 */}
-        <div className="px-24 pt-16 flex flex-col gap-12 max-w-xs">
+        {/* Content Section */}
+        <div className="px-24 pt-16 pb-24 flex flex-col gap-12 flex-1">
           <div className="flex flex-col gap-12">
-            <h3 className="text-primary text-xl font-medium leading-tight">
+            <h3 className="text-primary text-xl font-medium leading-tight break-words">
               {title}
             </h3>
+
             <div className="flex flex-col gap-[6px]">
-              <p className="text-secondary text-md font-normal leading-normal">
+              <p className="text-secondary text-md font-normal leading-normal break-words">
                 {location}
               </p>
-              <p className="text-tertiary text-sm font-normal leading-snug max-w-[90%]">
+
+              <p className="text-tertiary text-sm font-normal leading-snug break-words">
                 {tagline}
               </p>
             </div>
@@ -69,7 +72,7 @@ export function ProjectCard({ id, category, title, location, tagline, image }: P
 
         {/* Arrow Button - Bottom Right Position */}
         <div
-          className="group absolute bottom-24 right-24 rounded-full flex items-center justify-center cursor-pointer"
+          className="group absolute bottom-24 right-24 z-10 rounded-full flex items-center justify-center cursor-pointer"
         >
           <Button
             variant="primary"
