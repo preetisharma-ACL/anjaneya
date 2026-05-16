@@ -153,7 +153,7 @@ export function WhatWeOffer() {
             <div className="flex flex-col gap-12 xl:pl-80 lg:ml-auto">
               <div className="flex flex-col gap-16 max-w-[560px]">
                 <span className="text-surface-primary text-sm font-sans font-medium uppercase tracking-[0.2em]">
-                  What We Offer
+                  What We Offer 
                 </span>
                 <div className="flex flex-col gap-16">
                   <h2 className="text-primary text-4xl lg:text-[40px] font-sans font-bold leading-tight lg:leading-56 max-w-[532px]">

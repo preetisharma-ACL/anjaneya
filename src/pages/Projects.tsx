@@ -3,103 +3,94 @@ import { SubPageHero } from "@/components/SubPageHero";
 import projectsHero from "@/assets/featured-hero.png";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Search, ArrowLeft, ArrowRight } from "lucide-react";
+import { getProjects } from "@/api/services/projectService";
+// Shape of each project returned by the API
+interface ApiProject {
+  id: number;
+  slug: string;
+  title: string;
+  tagline: string;
+  category: { id: number; name: string; slug: string };
+  city: { id: number; name: string; slug: string };
+  locality: string;
+  status: string;
+  property_type: string;
+  price_display: string;
+  size_display: string;
+  cover_image: string;
+  cover_thumbnail: string;
+  image_count: number;
+  is_featured: boolean;
+  published_at: string;
+}
 
-const PROJECTS_DATA = [
-  {
-    id: 1,
-    title: "CRC The Flagship",
-    location: "Sector-140A, Noida",
-    category: "Commercial",
-    tagline:
-      "Premium Retail Shops & Commercial Spaces",
-    city: "Noida",
-  },
-  {
-    id: 2,
-    title: "Sunrise Residency",
-    location: "Sector-45, Gurgaon",
-    category: "Residential",
-    tagline: "Modern Apartments with Green Spaces",
-    city: "Gurugram",
-  },
-  {
-    id: 3,
-    title: "Group 108",
-    location: "Sector-62, Noida",
-    category: "Commercial",
-    tagline: "Warehouse and Distribution Centers",
-    city: "Noida",
-  },
-  {
-    id: 4,
-    title: "Harmony Heights",
-    location: "Sector-21, Faridabad",
-    category: "Residential",
-    tagline: "Integrated Living, Shopping, and Office Spaces",
-    city: "Faridabad",
-  },
-  {
-    id: 5,
-    title: "Eldeco Echo of Eden",
-    location: "Sector-17, Ghaziabad",
-    category: "Residential",
-    tagline: "State-of-the-Art School Campus",
-    city: "Ghaziabad",
-  },
-  {
-    id: 6,
-    title: "Ace Divino",
-    location: "Sector-1, Noida",
-    category: "Residential",
-    tagline: "Advanced Medical Facilities and Clinics",
-    city: "Noida",
-  },
-  {
-    id: 7,
-    title: "Godrej South Estate",
-    location: "Okhla, New Delhi",
-    category: "Luxury",
-    tagline: "Pinnacle of Luxury Living in the Heart of South Delhi",
-    city: "New Delhi",
-  },
-  {
-    id: 8,
-    title: "M3M Capital",
-    location: "Sector-113, Gurgaon",
-    category: "Residential",
-    tagline: "Golf Style Living on Dwarka Expressway",
-    city: "Gurugram",
-  }
-];
+interface ApiResponse {
+  count: number;
+  total_pages: number;
+  next: string | null;
+  previous: string | null;
+  results: ApiProject[];
+}
 
-const CITIES = ["All Projects", "Noida", "Greater Noida", "Gurugram"];
+const ALL_PROJECTS_TAB = "All Projects";
 
 export function Projects() {
+  const [projects, setProjects] = useState<ApiProject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("All Projects");
+  const [activeTab, setActiveTab] = useState(ALL_PROJECTS_TAB);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Reset to first page when filtering changes
+  // Fetch projects from API on mount
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data: ApiResponse = await getProjects();
+        setProjects(data.results);
+      } catch (err) {
+        console.error("Failed to fetch projects:", err);
+        setError("Failed to load projects. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  // Derive unique city names from API data for tab bar
+  const cities = useMemo(() => {
+    const uniqueCities = Array.from(
+      new Set(projects.map((p) => p.city.name))
+    );
+    return [ALL_PROJECTS_TAB, ...uniqueCities];
+  }, [projects]);
+
+  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, activeTab]);
 
   const filteredProjects = useMemo(() => {
-    return PROJECTS_DATA.filter((project) => {
-      const matchesSearch = 
+    return projects.filter((project) => {
+      const matchesSearch =
         project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.location.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesTab = 
-        activeTab === "All Projects" || project.city === activeTab;
+        project.locality.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesTab =
+        activeTab === ALL_PROJECTS_TAB || project.city.name === activeTab;
 
       return matchesSearch && matchesTab;
     });
-  }, [searchQuery, activeTab]);
+  }, [projects, searchQuery, activeTab]);
 
   const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
-  
+
   const paginatedProjects = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return filteredProjects.slice(startIndex, startIndex + itemsPerPage);
@@ -117,20 +108,20 @@ export function Projects() {
       />
 
       <section className="max-w-[1440px] mx-auto px-24 sm:px-48 lg:px-120 py-64 sm:py-80">
-        
+
         {/* Controls: Tabs & Search */}
         <div className="flex flex-col lg:flex-row justify-between items-center gap-32 mb-64">
-          
-          {/* Tab Bar */}
+
+          {/* Tab Bar — populated from API city data */}
           <div className="flex items-center gap-12 sm:gap-16 overflow-x-auto pb-8 lg:pb-0 w-full lg:w-auto no-scrollbar">
-            {CITIES.map((city) => (
+            {cities.map((city) => (
               <button
                 key={city}
                 onClick={() => setActiveTab(city)}
                 className={`
                   whitespace-nowrap px-24 py-12 rounded-full-999 text-sm font-medium transition-all duration-300 border
-                  ${activeTab === city 
-                    ? "bg-primary text-negative border-primary" 
+                  ${activeTab === city
+                    ? "bg-primary text-negative border-primary"
                     : "bg-surface-white text-primary border-default hover:border-primary/40"
                   }
                 `}
@@ -158,26 +149,49 @@ export function Projects() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-80">
+            <div className="size-40 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <div className="text-center py-80">
+            <p className="text-tertiary text-lg">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-16 text-surface-primary font-medium hover:underline"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Project Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-32">
-          {paginatedProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              id={project.id}
-              category={project.category}
-              title={project.title}
-              location={project.location}
-              tagline={project.tagline}
-            />
-          ))}
-        </div>
+        {!loading && !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-32">
+            {paginatedProjects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                id={project.id}
+                category={project.category.name}
+                title={project.title}
+                location={project.locality}
+                tagline={project.tagline}
+                image={project.cover_thumbnail || project.cover_image}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Empty State */}
-        {filteredProjects.length === 0 && (
+        {!loading && !error && filteredProjects.length === 0 && (
           <div className="text-center py-80">
             <p className="text-tertiary text-lg">No projects found matching your criteria.</p>
-            <button 
-              onClick={() => { setSearchQuery(""); setActiveTab("All Projects"); }}
+            <button
+              onClick={() => { setSearchQuery(""); setActiveTab(ALL_PROJECTS_TAB); }}
               className="mt-16 text-surface-primary font-medium hover:underline"
             >
               Clear all filters
@@ -185,17 +199,17 @@ export function Projects() {
           </div>
         )}
 
-        {/* Pagination UI */}
-        {totalPages > 1 && (
+        {/* Pagination */}
+        {!loading && !error && totalPages > 1 && (
           <div className="flex justify-center items-center gap-12 sm:gap-16 mt-80">
-            {/* Previous Button */}
+            {/* Previous */}
             <button
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
               className={`
                 size-40 sm:size-56 rounded-full-999 border flex items-center justify-center transition-all duration-300
-                ${currentPage === 1 
-                  ? "border-default opacity-30 cursor-not-allowed" 
+                ${currentPage === 1
+                  ? "border-default opacity-30 cursor-not-allowed"
                   : "border-default hover:border-primary/40 bg-surface-white cursor-pointer"
                 }
               `}
@@ -212,8 +226,8 @@ export function Projects() {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`
                     size-40 sm:size-56 rounded-full-999 text-md font-medium transition-all duration-300 flex items-center justify-center
-                    ${currentPage === pageNum 
-                      ? "bg-surface-primary text-negative" 
+                    ${currentPage === pageNum
+                      ? "bg-surface-primary text-negative"
                       : "bg-surface-white text-surface-primary border border-default hover:border-primary/40"
                     }
                   `}
@@ -223,14 +237,14 @@ export function Projects() {
               );
             })}
 
-            {/* Next Button */}
+            {/* Next */}
             <button
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
               className={`
                 size-40 sm:size-56 rounded-full-999 border flex items-center justify-center transition-all duration-300
-                ${currentPage === totalPages 
-                  ? "border-default opacity-30 cursor-not-allowed" 
+                ${currentPage === totalPages
+                  ? "border-default opacity-30 cursor-not-allowed"
                   : "border-default hover:border-primary/40 bg-surface-white cursor-pointer"
                 }
               `}
