@@ -379,7 +379,7 @@ export function ProjectDetails() {
                 {project.highlights.map((h) => (
                   <li key={h.id} className="flex items-center gap-12">
                     <img
-                      src="/src/assets/tick-circle.svg"
+                      src="/assets/tick-circle.svg"
                       alt="tick"
                       className="size-5"
                     />
