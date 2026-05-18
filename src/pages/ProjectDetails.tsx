@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { ConsultationForm } from "@/components/ConsultationForm";
+import iconimage from "@/assets/tick-circle.svg";
 // import { ProjectCard } from "@/components/ProjectCard";
 import { getProjectById } from "@/api/services/projectService";
 
@@ -379,7 +380,7 @@ export function ProjectDetails() {
                 {project.highlights.map((h) => (
                   <li key={h.id} className="flex items-center gap-12">
                     <img
-                      src="/assets/tick-circle.svg"
+                      src={iconimage}
                       alt="tick"
                       className="size-5"
                     />
