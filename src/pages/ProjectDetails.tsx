@@ -488,7 +488,7 @@ export function ProjectDetails() {
             </h4>
           </div>
 
-          <div className="overflow-hidden">
+          <div className="overflow-auto">
             <motion.div
               ref={carouselRef}
               drag="x"
