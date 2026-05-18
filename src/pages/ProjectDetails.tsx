@@ -7,7 +7,6 @@ import iconimage from "@/assets/tick-circle.svg";
 import { ProjectCard } from "@/components/ProjectCard";
 import { getProjectById, getProjects } from "@/api/services/projectService";
 
-
 // ---- Types ----
 interface Amenity {
   id: number;
@@ -71,26 +70,7 @@ interface ProjectDetail {
   published_at: string;
 }
 
-function formatStatus(status: string) {
-  return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-export function ProjectDetails() {
-  const { id } = useParams<{ id: string }>();
-
-  const [project, setProject] = useState<ProjectDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [activeTab, setActiveTab] = useState("overview");
-  const heroRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [carouselWidth, setCarouselWidth] = useState(0);
-
-  // Add this import at the top
-
-// Add this state near your other useState declarations
-const [relatedProjects, setRelatedProjects] = useState<Array<{
+interface RelatedProject {
   id: number;
   slug: string;
   title: string;
@@ -99,43 +79,46 @@ const [relatedProjects, setRelatedProjects] = useState<Array<{
   category: { name: string };
   cover_thumbnail: string;
   cover_image: string;
-}>>([]);
+}
 
-// Add this inside your existing fetch useEffect, after setProject(data):
-useEffect(() => {
-  if (!id) return;
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getProjectById(id);
-      setProject(data);
+function formatStatus(status: string) {
+  return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
-      // Fetch related projects (all projects minus current)
-      const allData = await getProjects();
-      const others = allData.results.filter(
-        (p: { id: number }) => p.id !== data.id
-      );
-      setRelatedProjects(others);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to load project details. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchData();
-}, [id]);
+export function ProjectDetails() {
+  const { id } = useParams<{ id: string }>();
 
-  // Fetch project
+  const [project, setProject] = useState<ProjectDetail | null>(null);
+  const [relatedProjects, setRelatedProjects] = useState<RelatedProject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [activeTab, setActiveTab] = useState("overview");
+  const heroRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [carouselWidth, setCarouselWidth] = useState(0);
+
+  // ── Single fetch effect — project + related combined ──
   useEffect(() => {
     if (!id) return;
-    const fetch = async () => {
+
+    const fetchAll = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getProjectById(id);
-        setProject(data);
+
+        // Run both requests in parallel
+        const [projectData, allProjectsData] = await Promise.all([
+          getProjectById(id),
+          getProjects(),
+        ]);
+
+        setProject(projectData);
+
+        const others = allProjectsData.results.filter(
+          (p: { id: number }) => p.id !== projectData.id
+        );
+        setRelatedProjects(others);
       } catch (err) {
         console.error(err);
         setError("Failed to load project details. Please try again.");
@@ -143,23 +126,11 @@ useEffect(() => {
         setLoading(false);
       }
     };
-    fetch();
+
+    fetchAll();
   }, [id]);
 
-  // Carousel width — recalculate after images load
-  useEffect(() => {
-    if (!project) return;
-    const timer = setTimeout(() => {
-      if (carouselRef.current) {
-        setCarouselWidth(
-          carouselRef.current.scrollWidth - carouselRef.current.offsetWidth
-        );
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [project]);
-
-  // Scroll spy + navbar hide
+  // ── Scroll spy + navbar hide — runs after project renders sections into DOM ──
   useEffect(() => {
     if (!project) return;
 
@@ -194,7 +165,7 @@ useEffect(() => {
       document.body.classList.remove("hide-navbar");
       observer.disconnect();
     };
-  }, [project]); // run after project renders sections into DOM
+  }, [project]);
 
   const scrollToSection = (sectionId: string) => {
     const el = document.getElementById(sectionId);
@@ -204,6 +175,14 @@ useEffect(() => {
         top: el.getBoundingClientRect().top + window.scrollY - 120,
         behavior: "smooth",
       });
+    }
+  };
+
+  const remeasureCarousel = () => {
+    if (carouselRef.current) {
+      setCarouselWidth(
+        carouselRef.current.scrollWidth - carouselRef.current.offsetWidth
+      );
     }
   };
 
@@ -247,12 +226,11 @@ useEffect(() => {
   const galleryImages =
     project.images.length > 0
       ? project.images.map((img) => ({
-        src: img.medium || img.image,
-        alt: img.alt_text || img.caption || project.title,
-      }))
+          src: img.medium || img.image,
+          alt: img.alt_text || img.caption || project.title,
+        }))
       : [{ src: project.cover_large || project.cover_image, alt: project.title }];
 
-  // Clean map URL (API response has extra junk appended after a quote char)
   const cleanMapUrl = project.map_embed_url
     ? project.map_embed_url.split('"')[0]
     : "";
@@ -338,10 +316,11 @@ useEffect(() => {
               <button
                 key={tab.id}
                 onClick={() => scrollToSection(tab.id)}
-                className={`h-full px-24 flex items-center shrink-0 justify-center cursor-pointer text-[14px] font-medium tracking-[0.15em] transition-all duration-300 border-b-2 ${activeTab === tab.id
-                  ? "text-surface-primary border-surface-primary"
-                  : "text-primary border-transparent hover:text-surface-primary"
-                  }`}
+                className={`h-full px-24 flex items-center shrink-0 justify-center cursor-pointer text-[14px] font-medium tracking-[0.15em] transition-all duration-300 border-b-2 ${
+                  activeTab === tab.id
+                    ? "text-surface-primary border-surface-primary"
+                    : "text-primary border-transparent hover:text-surface-primary"
+                }`}
               >
                 {tab.label}
               </button>
@@ -365,10 +344,7 @@ useEffect(() => {
                   .split(/\r?\n/)
                   .filter(Boolean)
                   .map((para, i) => (
-                    <p
-                      key={i}
-                      className="text-secondary text-md font-extralight leading-relaxed"
-                    >
+                    <p key={i} className="text-secondary text-md font-extralight leading-relaxed">
                       {para}
                     </p>
                   ))}
@@ -392,11 +368,7 @@ useEffect(() => {
                     key={amenity.id}
                     className="flex flex-col items-center justify-center text-center p-16 bg-[#FDFAF6] rounded-xl-16 size-120 gap-12"
                   >
-                    <img
-                      src={amenity.icon}
-                      alt={amenity.name}
-                      className="size-32"
-                    />
+                    <img src={amenity.icon} alt={amenity.name} className="size-32" />
                     <span className="text-primary text-[10px] font-extralight leading-tight">
                       {amenity.name}
                     </span>
@@ -419,11 +391,7 @@ useEffect(() => {
               <ul className="flex flex-col gap-16">
                 {project.highlights.map((h) => (
                   <li key={h.id} className="flex items-center gap-12">
-                    <img
-                      src={iconimage}
-                      alt="tick"
-                      className="size-5"
-                    />
+                    <img src={iconimage} alt="tick" className="size-5" />
                     <span className="text-secondary text-sm font-extralight leading-normal">
                       {h.text}
                     </span>
@@ -491,10 +459,10 @@ useEffect(() => {
                 width="100%"
                 height="400"
                 style={{ border: 0, borderRadius: "24px" }}
-                allowFullScreen
+                allowFullScreen={true}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-              />
+              ></iframe>
             ) : (
               <p className="text-secondary text-md font-extralight">
                 {project.locality}
@@ -512,8 +480,6 @@ useEffect(() => {
       </div>
 
       {/* ── Gallery ── */}
-      {/* Project Gallery */}
-      {/* Project Gallery */}
       <section className="pt-24 pb-80">
         <div className="flex flex-col gap-24">
           <div className="max-w-[1200px] mx-auto px-40 w-full text-left">
@@ -531,7 +497,7 @@ useEffect(() => {
               className="flex cursor-grab active:cursor-grabbing px-40 gap-16"
             >
               {galleryImages.map((img, index) => (
-                <motion.div
+                <div
                   key={index}
                   className="shrink-0 w-[300px] md:w-[420px] h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
                 >
@@ -539,24 +505,17 @@ useEffect(() => {
                     src={img.src}
                     alt={img.alt}
                     draggable={false}
-                    onLoad={() => {
-                      // remeasure after each image loads
-                      if (carouselRef.current) {
-                        setCarouselWidth(
-                          carouselRef.current.scrollWidth - carouselRef.current.offsetWidth
-                        );
-                      }
-                    }}
+                    onLoad={remeasureCarousel}
                     className="w-full h-full object-cover pointer-events-none"
                   />
-                </motion.div>
+                </div>
               ))}
             </motion.div>
           </div>
         </div>
       </section>
-      {/* You May Also Like Section */}
-      {/* You May Also Like */}
+
+      {/* ── You May Also Like ── */}
       {relatedProjects.length > 0 && (
         <section className="py-80 lg:py-[100px] px-40 bg-[#FDFAF6]">
           <div className="flex flex-col gap-24 max-w-[1200px] mx-auto">
@@ -579,13 +538,6 @@ useEffect(() => {
           </div>
         </section>
       )}
-
-      {/* ── You May Also Like ── */}
-      {/* 
-        To make this dynamic, you'd fetch all projects and filter out the current one.
-        For now this section is omitted — add it back once you wire up a getProjects call here.
-        Or pass related projects from a parent, or add a /projects/:id/related endpoint.
-      */}
     </main>
   );
 }
