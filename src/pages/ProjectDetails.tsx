@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { ConsultationForm } from "@/components/ConsultationForm";
 import iconimage from "@/assets/tick-circle.svg";
-// import { ProjectCard } from "@/components/ProjectCard";
-import { getProjectById } from "@/api/services/projectService";
+import { ProjectCard } from "@/components/ProjectCard";
+import { getProjectById, getProjects } from "@/api/services/projectService";
+
 
 // ---- Types ----
 interface Amenity {
@@ -85,6 +86,46 @@ export function ProjectDetails() {
   const heroRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [carouselWidth, setCarouselWidth] = useState(0);
+
+  // Add this import at the top
+
+// Add this state near your other useState declarations
+const [relatedProjects, setRelatedProjects] = useState<Array<{
+  id: number;
+  slug: string;
+  title: string;
+  locality: string;
+  tagline: string;
+  category: { name: string };
+  cover_thumbnail: string;
+  cover_image: string;
+}>>([]);
+
+// Add this inside your existing fetch useEffect, after setProject(data):
+useEffect(() => {
+  if (!id) return;
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getProjectById(id);
+      setProject(data);
+
+      // Fetch related projects (all projects minus current)
+      const allData = await getProjects();
+      const others = allData.results.filter(
+        (p: { id: number }) => p.id !== data.id
+      );
+      setRelatedProjects(others);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load project details. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, [id]);
 
   // Fetch project
   useEffect(() => {
@@ -197,8 +238,8 @@ export function ProjectDetails() {
     project.price_starting_lacs
       ? { label: "Price Starts from", value: `${project.price_starting_lacs} Lacs*` }
       : project.price_display
-      ? { label: "Price", value: project.price_display }
-      : null,
+        ? { label: "Price", value: project.price_display }
+        : null,
     project.size_display ? { label: "Sizes", value: project.size_display } : null,
     project.developer ? { label: "Developer", value: project.developer.name } : null,
   ].filter(Boolean) as { label: string; value: string }[];
@@ -206,9 +247,9 @@ export function ProjectDetails() {
   const galleryImages =
     project.images.length > 0
       ? project.images.map((img) => ({
-          src: img.medium || img.image,
-          alt: img.alt_text || img.caption || project.title,
-        }))
+        src: img.medium || img.image,
+        alt: img.alt_text || img.caption || project.title,
+      }))
       : [{ src: project.cover_large || project.cover_image, alt: project.title }];
 
   // Clean map URL (API response has extra junk appended after a quote char)
@@ -297,11 +338,10 @@ export function ProjectDetails() {
               <button
                 key={tab.id}
                 onClick={() => scrollToSection(tab.id)}
-                className={`h-full px-24 flex items-center shrink-0 justify-center cursor-pointer text-[14px] font-medium tracking-[0.15em] transition-all duration-300 border-b-2 ${
-                  activeTab === tab.id
-                    ? "text-surface-primary border-surface-primary"
-                    : "text-primary border-transparent hover:text-surface-primary"
-                }`}
+                className={`h-full px-24 flex items-center shrink-0 justify-center cursor-pointer text-[14px] font-medium tracking-[0.15em] transition-all duration-300 border-b-2 ${activeTab === tab.id
+                  ? "text-surface-primary border-surface-primary"
+                  : "text-primary border-transparent hover:text-surface-primary"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -472,36 +512,73 @@ export function ProjectDetails() {
       </div>
 
       {/* ── Gallery ── */}
-      <section className="pt-24">
+      {/* Project Gallery */}
+      {/* Project Gallery */}
+      <section className="pt-24 pb-80">
         <div className="flex flex-col gap-24">
-          <div className="max-w-[1200px] mx-auto px-40 w-full">
+          <div className="max-w-[1200px] mx-auto px-40 w-full text-left">
             <h4 className="font-headline text-2xl font-normal text-primary">
               Project Gallery
             </h4>
           </div>
+
           <div className="overflow-hidden">
             <motion.div
               ref={carouselRef}
               drag="x"
               dragConstraints={{ left: -carouselWidth, right: 0 }}
+              dragElastic={0.1}
               className="flex cursor-grab active:cursor-grabbing px-40 gap-16"
             >
               {galleryImages.map((img, index) => (
-                <div
+                <motion.div
                   key={index}
-                  className="shrink-0 h-50 md:h-[350px] select-none"
+                  className="shrink-0 w-[300px] md:w-[420px] h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
                 >
                   <img
                     src={img.src}
                     alt={img.alt}
-                    className="w-full h-full object-cover rounded-l-16 shadow-lg pointer-events-none"
+                    draggable={false}
+                    onLoad={() => {
+                      // remeasure after each image loads
+                      if (carouselRef.current) {
+                        setCarouselWidth(
+                          carouselRef.current.scrollWidth - carouselRef.current.offsetWidth
+                        );
+                      }
+                    }}
+                    className="w-full h-full object-cover pointer-events-none"
                   />
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
         </div>
       </section>
+      {/* You May Also Like Section */}
+      {/* You May Also Like */}
+      {relatedProjects.length > 0 && (
+        <section className="py-80 lg:py-[100px] px-40 bg-[#FDFAF6]">
+          <div className="flex flex-col gap-24 max-w-[1200px] mx-auto">
+            <h2 className="font-headline text-2xl lg:text-[32px] text-center text-primary font-medium">
+              You May Also Like
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-32">
+              {relatedProjects.slice(0, 3).map((related) => (
+                <ProjectCard
+                  key={related.id}
+                  id={related.id}
+                  category={related.category.name}
+                  title={related.title}
+                  location={related.locality}
+                  tagline={related.tagline}
+                  image={related.cover_thumbnail || related.cover_image}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── You May Also Like ── */}
       {/* 
