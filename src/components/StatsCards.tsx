@@ -107,11 +107,11 @@ export function StatsCards() {
       <div className="max-w-[1440px] mx-auto px-24 sm:px-48 md:px-[153px]">
         <div className="flex flex-col xl:flex-row items-center xl:justify-between gap-24 xl:gap-16">
           <AnimatedStatCard
-            title="98+"
+            title="1500+"
             subtitle="Happy clients, countless smiles delivered"
           />
           <AnimatedStatCard
-            title="100Cr+"
+            title="500Cr+"
             subtitle="Property value managed with excellence"
           />
           <FindPropertyCard />

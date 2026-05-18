@@ -55,7 +55,7 @@ const TEAMS = [
   {
     name: "Vikrant Singh",
     image: vikrantImg,
-    designation: "Co-Founder & COO",
+    designation: "Director - Sales & Marketing",
     description: [
       "Vikrant Singh brings over 13 years of experience in luxury real estate sales and marketing across both residential and commercial segments. Before co-founding Anjaneya Global Realty, he spent nearly 9 years as Assistant Director at Bullmen Realty India, where he honed his expertise in direct sales, team building, and large-scale project execution.",
       "He also served as Vice President of Sales at Eleque Infra, Director at Innovation Infra Solutions, and Senior Manager at Investor Clinic - building a deep understanding of the Noida and NCR real estate landscape.",
@@ -69,7 +69,7 @@ const TEAMS = [
   {
     name: "Raunak Verma",
     image: raunakImg,
-    designation: "Co-Founder & CMO",
+    designation: "Director - Sales & Marketing",
     description: [
       "Raunak Verma is a seasoned real estate sales and marketing professional with over 10 years of progressive experience in luxury and high-value residential and commercial deals. Before co-founding Anjaneya Global Realty, he built his career at Bullmen Realty India, rising from Associate to Vice President of Sales over nearly a decade - demonstrating deep expertise in direct sales, team leadership, and site operations.",
       "He also served as Assistant Director at Innovation Infra Solutions.",
@@ -83,7 +83,7 @@ const TEAMS = [
   {
     name: "Upender Singh",
     image: upenderImg,
-    designation: "Director - Investment Strategy",
+    designation: "Director - Sales & Marketing",
     description: [
       "Upender Singh is a seasoned real estate leader and investment strategist with over 8 years of experience across India's luxury and commercial property sectors. As Director at Investment Experts Infratech Pvt. Ltd., he developed deep expertise in the end-to-end lifecycle of high-value real estate assets - from strategic land acquisition through to successful project monetization.",
       "With a track record of managing transactions for over 5,000 investors and delivering multi-billion-rupee project outcomes, Upender brings institutional-grade investment intelligence to every client engagement at Anjaneya Global Realty.",

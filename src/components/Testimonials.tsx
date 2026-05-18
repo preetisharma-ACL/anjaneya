@@ -110,7 +110,7 @@ export function Testimonials() {
                   opportunities tailored to your goals.
                 </p>
               </div>
-
+              <a href="/contact" className="inline-block mt-auto">
               <Button
                 variant="primary"
                 size="xl"
@@ -119,6 +119,7 @@ export function Testimonials() {
                 Connect with us
                 <ArrowUpRight className="w-16 h-16 group-hover:rotate-45 transition-all duration-300" />
               </Button>
+              </a>
             </div>
           </div>
 
