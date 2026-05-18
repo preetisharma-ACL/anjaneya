@@ -52,6 +52,7 @@ export function Hero() {
 
           {/* Call to Action */}
           <div className="group">
+            <a href="/projects" className="inline-block">
             <Button
               variant="primary"
               size="xl"
@@ -60,6 +61,7 @@ export function Hero() {
               Explore Properties
               <ArrowUpRight className="w-16 h-16 ml-8 group-hover:rotate-45 transition-all duration-300" />
             </Button>
+            </a>
           </div>
 
         </div>
