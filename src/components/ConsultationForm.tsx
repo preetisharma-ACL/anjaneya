@@ -220,7 +220,7 @@ export function ConsultationForm({ className = "" }: ConsultationFormProps) {
             {/* Email */}
             <div className="flex flex-col gap-4">
               <input
-                type="email"
+                type="email" 
                 name="email"
                 placeholder="Email id"
                 value={formData.email}
