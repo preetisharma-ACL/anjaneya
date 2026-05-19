@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { ConsultationForm } from "@/components/ConsultationForm";
 import iconimage from "@/assets/tick-circle.svg";
@@ -96,8 +95,12 @@ export function ProjectDetails() {
   const [activeTab, setActiveTab] = useState("overview");
   const heroRef = useRef<HTMLDivElement>(null);
   const carouselViewportRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [carouselWidth, setCarouselWidth] = useState(0);
+  const carouselDragRef = useRef({
+    isDragging: false,
+    scrollLeft: 0,
+    startX: 0,
+  });
+  const [isCarouselDragging, setIsCarouselDragging] = useState(false);
 
   // ── Single fetch effect — project + related combined ──
   useEffect(() => {
@@ -179,34 +182,41 @@ export function ProjectDetails() {
     }
   };
 
-  // Replace the remeasureCarousel function
-  const remeasureCarousel = () => {
-    if (carouselRef.current && carouselViewportRef.current) {
-      setCarouselWidth(
-        Math.max(
-          0,
-          carouselRef.current.scrollWidth -
-            carouselViewportRef.current.clientWidth
-        )
-      );
-    }
+  const handleCarouselPointerDown = (
+    e: PointerEvent<HTMLDivElement>
+  ) => {
+    if (e.pointerType === "touch" || !carouselViewportRef.current) return;
+
+    carouselDragRef.current = {
+      isDragging: true,
+      scrollLeft: carouselViewportRef.current.scrollLeft,
+      startX: e.clientX,
+    };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setIsCarouselDragging(true);
   };
 
-  // Add this useEffect after your other effects
-  // To this:
-  useEffect(() => {
-    if (!project) return;
-    const id = requestAnimationFrame(remeasureCarousel);
-    const observer = new ResizeObserver(remeasureCarousel);
-    if (carouselViewportRef.current) {
-      observer.observe(carouselViewportRef.current);
+  const handleCarouselPointerMove = (
+    e: PointerEvent<HTMLDivElement>
+  ) => {
+    if (!carouselDragRef.current.isDragging || !carouselViewportRef.current) {
+      return;
     }
-    if (carouselRef.current) observer.observe(carouselRef.current);
-    return () => {
-      cancelAnimationFrame(id);
-      observer.disconnect();
-    };
-  }, [project]); // ✅ project is enough
+
+    e.preventDefault();
+    carouselViewportRef.current.scrollLeft =
+      carouselDragRef.current.scrollLeft -
+      (e.clientX - carouselDragRef.current.startX);
+  };
+
+  const stopCarouselDrag = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+
+    carouselDragRef.current.isDragging = false;
+    setIsCarouselDragging(false);
+  };
 
   // ---- Loading ----
   if (loading) {
@@ -511,15 +521,16 @@ export function ProjectDetails() {
 
           <div
             ref={carouselViewportRef}
-            className="max-w-[1200px] mx-auto overflow-hidden"
+            onPointerDown={handleCarouselPointerDown}
+            onPointerMove={handleCarouselPointerMove}
+            onPointerUp={stopCarouselDrag}
+            onPointerCancel={stopCarouselDrag}
+            onPointerLeave={stopCarouselDrag}
+            className={`max-w-[1200px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
+              isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
           >
-            <motion.div
-              ref={carouselRef}
-              drag="x"
-              dragConstraints={{ left: -carouselWidth, right: 0 }}
-              dragElastic={0.1}
-              className="flex cursor-grab active:cursor-grabbing px-40 gap-16"
-            >
+            <div className="flex w-max px-40 gap-16">
               {galleryImages.map((img, index) => (
                 <div
                   key={index}
@@ -529,13 +540,11 @@ export function ProjectDetails() {
                     src={img.src}
                     alt={img.alt}
                     draggable={false}
-                    onLoad={remeasureCarousel}
-                    onError={remeasureCarousel}  // ← add this
                     className="w-full h-full object-cover pointer-events-none"
                   />
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
