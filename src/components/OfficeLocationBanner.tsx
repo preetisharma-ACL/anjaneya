@@ -68,7 +68,7 @@ export function OfficeLocationBanner() {
             </div>
           </div>
         </div>
-      </div>
+      </div> 
     </section>
   );
 }

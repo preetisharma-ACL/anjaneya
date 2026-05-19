@@ -38,7 +38,7 @@ export function Projects() {
   const [projects, setProjects] = useState<ApiProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+ 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState(ALL_PROJECTS_TAB);
   const [currentPage, setCurrentPage] = useState(1);

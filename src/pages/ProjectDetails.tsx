@@ -178,6 +178,7 @@ export function ProjectDetails() {
     }
   };
 
+  // Replace the remeasureCarousel function
   const remeasureCarousel = () => {
     if (carouselRef.current) {
       setCarouselWidth(
@@ -185,6 +186,19 @@ export function ProjectDetails() {
       );
     }
   };
+
+  // Add this useEffect after your other effects
+  // To this:
+  useEffect(() => {
+    if (!project) return;
+    const id = requestAnimationFrame(remeasureCarousel);
+    const observer = new ResizeObserver(remeasureCarousel);
+    if (carouselRef.current) observer.observe(carouselRef.current);
+    return () => {
+      cancelAnimationFrame(id);
+      observer.disconnect();
+    };
+  }, [project]); // ✅ project is enough
 
   // ---- Loading ----
   if (loading) {
@@ -226,9 +240,9 @@ export function ProjectDetails() {
   const galleryImages =
     project.images.length > 0
       ? project.images.map((img) => ({
-          src: img.medium || img.image,
-          alt: img.alt_text || img.caption || project.title,
-        }))
+        src: img.medium || img.image,
+        alt: img.alt_text || img.caption || project.title,
+      }))
       : [{ src: project.cover_large || project.cover_image, alt: project.title }];
 
   const cleanMapUrl = project.map_embed_url
@@ -316,11 +330,10 @@ export function ProjectDetails() {
               <button
                 key={tab.id}
                 onClick={() => scrollToSection(tab.id)}
-                className={`h-full px-24 flex items-center shrink-0 justify-center cursor-pointer text-[14px] font-medium tracking-[0.15em] transition-all duration-300 border-b-2 ${
-                  activeTab === tab.id
-                    ? "text-surface-primary border-surface-primary"
-                    : "text-primary border-transparent hover:text-surface-primary"
-                }`}
+                className={`h-full px-24 flex items-center shrink-0 justify-center cursor-pointer text-[14px] font-medium tracking-[0.15em] transition-all duration-300 border-b-2 ${activeTab === tab.id
+                  ? "text-surface-primary border-surface-primary"
+                  : "text-primary border-transparent hover:text-surface-primary"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -506,6 +519,7 @@ export function ProjectDetails() {
                     alt={img.alt}
                     draggable={false}
                     onLoad={remeasureCarousel}
+                    onError={remeasureCarousel}  // ← add this
                     className="w-full h-full object-cover pointer-events-none"
                   />
                 </div>
