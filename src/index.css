@@ -213,19 +213,3 @@ body.hide-navbar nav {
   --breakpoint-2xl: 100rem;
   --breakpoint-3xl: 120rem;
 }
-/* Gallery carousel card sizing */
-.gallery-card {
-  width: calc((100vw - 112px) / 1);   /* mobile: 1 visible (80px px-40 + 32px gap buffer) */
-}
-
-@media (min-width: 768px) {
-  .gallery-card {
-    width: calc((100vw - 128px) / 2);  /* tablet: 2 visible */
-  }
-}
-
-@media (min-width: 1024px) {
-  .gallery-card {
-    width: calc((100vw - 144px) / 3);  /* desktop: 3 visible */
-  }
-}

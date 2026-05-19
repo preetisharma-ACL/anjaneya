@@ -536,7 +536,6 @@ export function ProjectDetails() {
       </div>
 
       {/* ── Gallery ── */}
-      {/* ── Gallery ── */}
       <section className="pt-24 pb-80">
         <div className="flex flex-col gap-24">
           <div className="max-w-[1300px] mx-auto px-40 w-full text-left">
@@ -552,17 +551,15 @@ export function ProjectDetails() {
             onPointerUp={stopCarouselDrag}
             onPointerCancel={stopCarouselDrag}
             onPointerLeave={stopCarouselDrag}
-            className={`w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
-              }`}
+            className={`max-w-[1300px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
+              isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
+            }`}
           >
             <div className="flex w-max px-40 gap-16">
               {galleryImages.map((img, index) => (
                 <div
                   key={index}
-                  className="gallery-card shrink-0 h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
-                  style={{
-                    width: "calc((100vw - 112px) / 1)",      // mobile: 1 image (px-40 both sides + gaps)
-                  }}
+                  className="shrink-0 w-[300px] md:w-[420px] h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
                 >
                   <img
                     src={img.src}
