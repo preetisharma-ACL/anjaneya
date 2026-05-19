@@ -559,7 +559,7 @@ export function ProjectDetails() {
               {galleryImages.map((img, index) => (
                 <div
                   key={index}
-                  className="shrink-0 h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
+                  className="gallery-card shrink-0 h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
                   style={{
                     width: "calc((100vw - 112px) / 1)",      // mobile: 1 image (px-40 both sides + gaps)
                   }}
@@ -576,6 +576,7 @@ export function ProjectDetails() {
           </div>
         </div>
       </section>
+
       {/* ── You May Also Like ── */}
       {relatedProjects.length > 0 && (
         <section className="py-80 lg:py-[100px] px-40 bg-[#FDFAF6]">
