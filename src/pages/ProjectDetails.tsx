@@ -95,6 +95,7 @@ export function ProjectDetails() {
 
   const [activeTab, setActiveTab] = useState("overview");
   const heroRef = useRef<HTMLDivElement>(null);
+  const carouselViewportRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [carouselWidth, setCarouselWidth] = useState(0);
 
@@ -180,9 +181,13 @@ export function ProjectDetails() {
 
   // Replace the remeasureCarousel function
   const remeasureCarousel = () => {
-    if (carouselRef.current) {
+    if (carouselRef.current && carouselViewportRef.current) {
       setCarouselWidth(
-        carouselRef.current.scrollWidth - carouselRef.current.offsetWidth
+        Math.max(
+          0,
+          carouselRef.current.scrollWidth -
+            carouselViewportRef.current.clientWidth
+        )
       );
     }
   };
@@ -193,6 +198,9 @@ export function ProjectDetails() {
     if (!project) return;
     const id = requestAnimationFrame(remeasureCarousel);
     const observer = new ResizeObserver(remeasureCarousel);
+    if (carouselViewportRef.current) {
+      observer.observe(carouselViewportRef.current);
+    }
     if (carouselRef.current) observer.observe(carouselRef.current);
     return () => {
       cancelAnimationFrame(id);
@@ -501,7 +509,10 @@ export function ProjectDetails() {
             </h4>
           </div>
 
-          <div className="overflow-hidden">
+          <div
+            ref={carouselViewportRef}
+            className="max-w-[1200px] mx-auto overflow-hidden"
+          >
             <motion.div
               ref={carouselRef}
               drag="x"
