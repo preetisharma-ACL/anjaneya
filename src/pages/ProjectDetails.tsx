@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { ConsultationForm } from "@/components/ConsultationForm";
@@ -171,6 +171,31 @@ export function ProjectDetails() {
     };
   }, [project]);
 
+  useEffect(() => {
+    const viewport = carouselViewportRef.current;
+    const galleryImageCount = project?.images.length || (project ? 1 : 0);
+
+    if (!viewport || galleryImageCount <= 1 || isCarouselDragging) return;
+
+    const intervalId = window.setInterval(() => {
+      const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
+
+      if (maxScrollLeft <= 0) return;
+
+      if (viewport.scrollLeft >= maxScrollLeft - 8) {
+        viewport.scrollTo({ left: 0, behavior: "smooth" });
+        return;
+      }
+
+      viewport.scrollBy({
+        left: Math.min(viewport.clientWidth * 0.8, 420),
+        behavior: "smooth",
+      });
+    }, 3000);
+
+    return () => window.clearInterval(intervalId);
+  }, [project, isCarouselDragging]);
+
   const scrollToSection = (sectionId: string) => {
     const el = document.getElementById(sectionId);
     if (el) {
@@ -183,7 +208,7 @@ export function ProjectDetails() {
   };
 
   const handleCarouselPointerDown = (
-    e: PointerEvent<HTMLDivElement>
+    e: React.PointerEvent<HTMLDivElement>
   ) => {
     if (e.pointerType === "touch" || !carouselViewportRef.current) return;
 
@@ -197,7 +222,7 @@ export function ProjectDetails() {
   };
 
   const handleCarouselPointerMove = (
-    e: PointerEvent<HTMLDivElement>
+    e: React.PointerEvent<HTMLDivElement>
   ) => {
     if (!carouselDragRef.current.isDragging || !carouselViewportRef.current) {
       return;
@@ -209,7 +234,7 @@ export function ProjectDetails() {
       (e.clientX - carouselDragRef.current.startX);
   };
 
-  const stopCarouselDrag = (e: PointerEvent<HTMLDivElement>) => {
+  const stopCarouselDrag = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.currentTarget.hasPointerCapture(e.pointerId)) {
       e.currentTarget.releasePointerCapture(e.pointerId);
     }
@@ -513,7 +538,7 @@ export function ProjectDetails() {
       {/* ── Gallery ── */}
       <section className="pt-24 pb-80">
         <div className="flex flex-col gap-24">
-          <div className="max-w-[1200px] mx-auto px-40 w-full text-left">
+          <div className="max-w-[1500px] mx-auto px-40 w-full text-left">
             <h4 className="font-headline text-2xl font-normal text-primary">
               Project Gallery
             </h4>
@@ -526,7 +551,7 @@ export function ProjectDetails() {
             onPointerUp={stopCarouselDrag}
             onPointerCancel={stopCarouselDrag}
             onPointerLeave={stopCarouselDrag}
-            className={`max-w-[1200px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
+            className={`max-w-[1500px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
               isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
           >
