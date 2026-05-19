@@ -551,15 +551,14 @@ export function ProjectDetails() {
             onPointerUp={stopCarouselDrag}
             onPointerCancel={stopCarouselDrag}
             onPointerLeave={stopCarouselDrag}
-            className={`max-w-[1300px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
-              isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
-            }`}
+            className={`max-w-[1300px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
+              }`}
           >
             <div className="flex w-max px-40 gap-16">
               {galleryImages.map((img, index) => (
                 <div
                   key={index}
-                  className="shrink-0 w-[300px] md:w-[420px] h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
+                  className=" shrink-0 w-full sm:w-[48%] lg:w-[32%] h-[220px] md:h-[280px] rounded-2xl overflow-hidden shadow-lg select-none "
                 >
                   <img
                     src={img.src}
