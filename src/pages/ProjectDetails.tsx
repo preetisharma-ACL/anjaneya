@@ -538,7 +538,7 @@ export function ProjectDetails() {
       {/* ── Gallery ── */}
       <section className="pt-24 pb-80">
         <div className="flex flex-col gap-24">
-          <div className="max-w-[1250px] mx-auto px-40 w-full text-left">
+          <div className="max-w-[1300px] mx-auto px-40 w-full text-left">
             <h4 className="font-headline text-2xl font-normal text-primary">
               Project Gallery
             </h4>
@@ -551,7 +551,7 @@ export function ProjectDetails() {
             onPointerUp={stopCarouselDrag}
             onPointerCancel={stopCarouselDrag}
             onPointerLeave={stopCarouselDrag}
-            className={`max-w-[1250px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
+            className={`max-w-[1300px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
               isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
             }`}
           >
