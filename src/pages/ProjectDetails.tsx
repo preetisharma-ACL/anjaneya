@@ -559,7 +559,7 @@ export function ProjectDetails() {
               {galleryImages.map((img, index) => (
                 <div
                   key={index}
-                  className="shrink-0 w-[300px] md:w-[420px] h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
+                  className="shrink-0 w-[280px] md:w-[420px] h-[220px] md:h-[300px] select-none rounded-2xl overflow-hidden shadow-lg"
                 >
                   <img
                     src={img.src}

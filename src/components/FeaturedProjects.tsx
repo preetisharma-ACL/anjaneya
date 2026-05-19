@@ -87,6 +87,7 @@ export function FeaturedProjects() {
             View All Properties
             <ArrowRight className="w-24 h-24 transition-transform group-hover:translate-x-1" />
           </motion.button> */}
+          <a href="/projects">
           <Button
             variant="primary"
             size="xl"
@@ -95,6 +96,7 @@ export function FeaturedProjects() {
             View All Properties
             <ArrowUpRight className="w-16 h-16 group-hover:rotate-45 transition-all duration-300" />
           </Button>
+          </a>
         </div>
       </div>
     </section>
