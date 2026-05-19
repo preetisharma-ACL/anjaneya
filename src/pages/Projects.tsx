@@ -175,7 +175,7 @@ export function Projects() {
             {paginatedProjects.map((project) => (
               <ProjectCard
                 key={project.id}
-                id={project.id}
+                slug={project.slug}
                 category={project.category.name}
                 title={project.title}
                 location={project.locality}

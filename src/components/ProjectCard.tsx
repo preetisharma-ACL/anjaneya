@@ -5,7 +5,8 @@ import bungalowImg from "@/assets/bungalow.png";
 import { Button } from "./ui/button";
 
 interface ProjectCardProps {
-  id: number | string;
+  // id: number | string;
+  slug: string;
   category: string;
   title: string;
   location: string;
@@ -13,9 +14,9 @@ interface ProjectCardProps {
   image?: string;
 }
 
-export function ProjectCard({ id, category, title, location, tagline, image }: ProjectCardProps) {
+export function ProjectCard({ slug, category, title, location, tagline, image }: ProjectCardProps) {
   return (
-    <Link to={`/projects/${id}`} className="block h-full">
+    <Link to={`/projects/${slug}`} className="block h-full">
       <motion.div
         initial="rest"
         whileHover="hover"

@@ -85,7 +85,7 @@ function formatStatus(status: string) {
 }
 
 export function ProjectDetails() {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
 
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [relatedProjects, setRelatedProjects] = useState<RelatedProject[]>([]);
@@ -104,7 +104,7 @@ export function ProjectDetails() {
 
   // ── Single fetch effect — project + related combined ──
   useEffect(() => {
-    if (!id) return;
+    if (!slug) return;
 
     const fetchAll = async () => {
       try {
@@ -113,7 +113,7 @@ export function ProjectDetails() {
 
         // Run both requests in parallel
         const [projectData, allProjectsData] = await Promise.all([
-          getProjectById(id),
+          getProjectById(slug),
           getProjects(),
         ]);
 
@@ -132,7 +132,7 @@ export function ProjectDetails() {
     };
 
     fetchAll();
-  }, [id]);
+  }, [slug]);
 
   // ── Scroll spy + navbar hide — runs after project renders sections into DOM ──
   useEffect(() => {
@@ -585,7 +585,7 @@ export function ProjectDetails() {
               {relatedProjects.slice(0, 3).map((related) => (
                 <ProjectCard
                   key={related.id}
-                  id={related.id}
+                  slug={related.slug}
                   category={related.category.name}
                   title={related.title}
                   location={related.locality}

@@ -6,21 +6,21 @@ import { Button } from "./ui/button";
 export function FeaturedProjects() {
   const projects = [
     {
-      id: 1,
+      slug: "crc-the-flagship",
       category: "Commercial",
       title: "CRC The Flagship",
       location: "Sector-140A, Noida",
       tagline: "Premium Retail Shops & Commercial Spaces",
     },
     {
-      id: 2,
+      slug: "godrej-tropical-isle",
       category: "Residential",
       title: "Godrej Tropical Isle",
       location: "Sector-146, Noida",
       tagline: "Ultra-Luxury Apartments with Private Decks",
     },
     {
-      id: 3,
+      slug: "ace-terra",
       category: "Residential",
       title: "Ace Terra",
       location: "Yamuna Expressway, Noida",
@@ -88,14 +88,14 @@ export function FeaturedProjects() {
             <ArrowRight className="w-24 h-24 transition-transform group-hover:translate-x-1" />
           </motion.button> */}
           <a href="/projects">
-          <Button
-            variant="primary"
-            size="xl"
-            className="group rounded-full bg-surface-primary text-white flex items-center justify-center gap-16"
-          >
-            View All Properties
-            <ArrowUpRight className="w-16 h-16 group-hover:rotate-45 transition-all duration-300" />
-          </Button>
+            <Button
+              variant="primary"
+              size="xl"
+              className="group rounded-full bg-surface-primary text-white flex items-center justify-center gap-16"
+            >
+              View All Properties
+              <ArrowUpRight className="w-16 h-16 group-hover:rotate-45 transition-all duration-300" />
+            </Button>
           </a>
         </div>
       </div>
