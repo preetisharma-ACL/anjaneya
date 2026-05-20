@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import logo from "@/assets/logo-light.svg";
 import { getSiteSettings } from "@/api/services/homeService";
+import { PrivacyPolicy } from "@/pages/Privacypolicy";
+import { TermsAndConditions } from "@/pages/Termsandconditions";
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 interface SiteSettings {
@@ -88,10 +90,10 @@ const services = [
 function buildSocialLinks(s: SiteSettings) {
   return [
     { Icon: SocialIcons.Instagram, url: s.instagram_url, label: "Instagram" },
-    { Icon: SocialIcons.Linkedin,  url: s.linkedin_url,  label: "LinkedIn"  },
-    { Icon: SocialIcons.Facebook,  url: s.facebook_url,  label: "Facebook"  },
-    { Icon: SocialIcons.Youtube,   url: s.youtube_url,   label: "YouTube"   },
-    { Icon: SocialIcons.Whatsapp,  url: s.whatsapp_url,  label: "WhatsApp"  },
+    { Icon: SocialIcons.Linkedin, url: s.linkedin_url, label: "LinkedIn" },
+    { Icon: SocialIcons.Facebook, url: s.facebook_url, label: "Facebook" },
+    { Icon: SocialIcons.Youtube, url: s.youtube_url, label: "YouTube" },
+    { Icon: SocialIcons.Whatsapp, url: s.whatsapp_url, label: "WhatsApp" },
   ].filter((item) => Boolean(item.url));
 }
 
@@ -133,7 +135,7 @@ export function Footer() {
   }, []);
 
   // Derive dynamic arrays only when settings are available
-  const socialLinks  = settings ? buildSocialLinks(settings)  : [];
+  const socialLinks = settings ? buildSocialLinks(settings) : [];
   const contactItems = settings ? buildContactItems(settings) : [];
   const copyrightYear = settings?.copyright_year ?? new Date().getFullYear();
 
@@ -158,24 +160,24 @@ export function Footer() {
               <div className="flex items-center gap-12 flex-wrap">
                 {socialLinks.length > 0
                   ? socialLinks.map(({ Icon, url, label }) => (
-                      <a
-                        key={label}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={label}
-                        className="size-40 rounded-full border border-surface-primary/40 flex items-center justify-center hover:bg-surface-primary hover:border-surface-primary transition-all duration-300 group"
-                      >
-                        <Icon className="size-16 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all" />
-                      </a>
-                    ))
+                    <a
+                      key={label}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="size-40 rounded-full border border-surface-primary/40 flex items-center justify-center hover:bg-surface-primary hover:border-surface-primary transition-all duration-300 group"
+                    >
+                      <Icon className="size-16 opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all" />
+                    </a>
+                  ))
                   : /* Skeleton placeholders while loading */
-                    Array.from({ length: 4 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="size-40 rounded-full border border-negative/10 bg-negative/5 animate-pulse"
-                      />
-                    ))}
+                  Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="size-40 rounded-full border border-negative/10 bg-negative/5 animate-pulse"
+                    />
+                  ))}
               </div>
             </div>
           </div>
@@ -267,16 +269,27 @@ export function Footer() {
           <p className="text-negative opacity-50 text-xs">
             © {copyrightYear} Anjaneya Global Realty. All rights reserved. | Empowering Smart Real Estate Decisions.
           </p>
-          <div className="flex items-center text-xs gap-24">
-            {["Privacy Policy", "Terms of Service", "Disclaimer"].map((text) => (
-              <a
-                key={text}
-                href="#"
-                className="text-negative opacity-50 hover:text-surface-primary text-xs transition-colors"
-              >
-                {text}
-              </a>
-            ))}
+          <div className="flex items-center text-xs gap-24 flex-wrap">
+            <Link
+              to="/privacy-policy"
+              className="text-negative opacity-50 hover:text-surface-primary transition-colors"
+            >
+              Privacy Policy
+            </Link>
+
+            <Link
+              to="/terms-and-conditions"
+              className="text-negative opacity-50 hover:text-surface-primary transition-colors"
+            >
+              Terms & Conditions
+            </Link>
+
+            <Link
+              to="/disclaimer"
+              className="text-negative opacity-50 hover:text-surface-primary transition-colors"
+            >
+              Disclaimer
+            </Link>
           </div>
         </div>
       </div>

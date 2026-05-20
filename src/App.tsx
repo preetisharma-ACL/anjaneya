@@ -9,6 +9,8 @@ import { Projects } from "@/pages/Projects";
 import { ProjectDetails } from "@/pages/ProjectDetails";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { PrivacyPolicy } from "@/pages/Privacypolicy";
+import { TermsAndConditions } from "@/pages/Termsandconditions";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           <Route path="/team" element={<OurTeam />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:slug" element={<ProjectDetails />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         </Routes>
         <WhatsAppButton />
         <Footer />
