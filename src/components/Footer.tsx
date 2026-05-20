@@ -8,8 +8,6 @@ import {
 } from "lucide-react";
 import logo from "@/assets/logo-light.svg";
 import { getSiteSettings } from "@/api/services/homeService";
-import { PrivacyPolicy } from "@/pages/Privacypolicy";
-import { TermsAndConditions } from "@/pages/Termsandconditions";
 // ── Types ──────────────────────────────────────────────────────────────────────
 
 interface SiteSettings {
