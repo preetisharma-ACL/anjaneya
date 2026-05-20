@@ -5,4 +5,5 @@ export const ENDPOINTS = {
   PROJECTS: "/v1/projects",
   CONTACT: "/v1/contact",
   TEAM: "/v1/team",
+  TESTIMONIALS: "/v1/testimonials",
 };

@@ -5,3 +5,8 @@ export const getHomeData = async () => {
   const response = await api.get(ENDPOINTS.HOME);
   return response.data;
 };
+
+export const getTestimonials = async () => {
+  const response = await api.get(ENDPOINTS.TESTIMONIALS);
+  return response.data;
+};
