@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { postFormData } from "@/api/services/contactService";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -11,7 +12,7 @@ interface FormData {
   fullName: string;
   mobile: string;
   email: string;
-  requirements: string;
+  message: string; // alias for requirements to match API field
 }
 
 interface FormErrors {
@@ -28,11 +29,9 @@ const INITIAL_FORM_DATA: FormData = {
   fullName: "",
   mobile: "",
   email: "",
-  requirements: "",
+  message: "",
 };
 
-// Replace this with your actual POST endpoint when available.
-const API_ENDPOINT = "/api/consultations";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -102,31 +101,25 @@ export function ConsultationForm({ className = "" }: ConsultationFormProps) {
     setErrorMessage("");
 
     try {
-      const response = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          full_name: formData.fullName.trim(),
-          mobile: formData.mobile.trim(),
-          email: formData.email.trim(),
-          requirements: formData.requirements.trim(),
-        }),
+      await postFormData({
+        full_name: formData.fullName.trim(),
+        mobile: formData.mobile.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
       });
-
-      if (!response.ok) {
-        // Attempt to surface a server-provided error message.
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data?.message ?? `Request failed (${response.status})`);
-      }
 
       setSubmitStatus("success");
 
-      // Auto-reset after 3 s so the user can submit another enquiry.
+      // Auto-reset after 3 seconds
       setTimeout(resetForm, 3000);
-    } catch (err) {
+
+    } catch (err: any) {
       setSubmitStatus("error");
+
       setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong. Please try again."
+        err?.response?.data?.message ||
+        err?.message ||
+        "Something went wrong. Please try again."
       );
     }
   }
@@ -134,14 +127,13 @@ export function ConsultationForm({ className = "" }: ConsultationFormProps) {
   // ── Shared input class ───────────────────────────────────────────────────────
 
   const inputBase =
-    "w-full bg-[#FDFAF6] p-16 rounded-m-8 text-xs font-extralight text-[#888888] outline-none focus:ring-1 transition-all";
+    "w-full bg-[#FDFAF6] p-16 rounded-md text-xs font-extralight text-[#888888] outline-none focus:ring-1 transition-all";
 
   function inputClass(field: keyof FormErrors) {
-    return `${inputBase} ${
-      errors[field]
+    return `${inputBase} ${errors[field]
         ? "ring-1 ring-red-400 focus:ring-red-400"
         : "focus:ring-surface-primary/20"
-    }`;
+      }`;
   }
 
   // ── Render ───────────────────────────────────────────────────────────────────
@@ -220,7 +212,7 @@ export function ConsultationForm({ className = "" }: ConsultationFormProps) {
             {/* Email */}
             <div className="flex flex-col gap-4">
               <input
-                type="email" 
+                type="email"
                 name="email"
                 placeholder="Email id"
                 value={formData.email}
@@ -235,12 +227,12 @@ export function ConsultationForm({ className = "" }: ConsultationFormProps) {
               )}
             </div>
 
-            {/* Requirements */}
+            {/* Message */}
             <textarea
-              name="requirements"
+              name="message"
               placeholder="Any specific requirements?"
               rows={2}
-              value={formData.requirements}
+              value={formData.message}
               onChange={handleChange}
               disabled={submitStatus === "loading"}
               className={`${inputBase} focus:ring-surface-primary/20 resize-none`}
