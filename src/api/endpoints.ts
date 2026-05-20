@@ -4,4 +4,5 @@ export const ENDPOINTS = {
   SERVICES: "/v1/services",
   PROJECTS: "/v1/projects",
   CONTACT: "/v1/contact",
+  TEAM: "/v1/team",
 };
