@@ -1,11 +1,19 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import buildingBg from "@/assets/building-bg.png";
-
+import { getCities } from "@/api/services/homeService";
 interface StatCardProps {
   title: string;
   subtitle: string;
+}
+
+interface City {
+  id: number;
+  name: string;
+  slug: string;
+  display_order: number;
 }
 
 function AnimatedStatCard({ title, subtitle }: StatCardProps) {
@@ -61,6 +69,29 @@ function AnimatedStatCard({ title, subtitle }: StatCardProps) {
 }
 
 function FindPropertyCard() {
+  const navigate = useNavigate();
+  const [cities, setCities] = useState<City[]>([]);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const data = await getCities();
+        // Take only the first 3 cities
+        setCities(data.results.slice(0, 3));
+      } catch (err) {
+        console.error("Failed to fetch cities:", err);
+        // Fallback to empty — card will simply show no links
+        setCities([]);
+      }
+    };
+    fetchCities();
+  }, []);
+
+  const handleCityClick = (slug: string) => {
+    // Navigate to /projects with city query param only (no category param)
+    navigate(`/projects?city=${slug}`);
+  };
+
   return (
     <div
       className="relative w-full max-w-[352px] xl:w-[352px] shrink-0 h-[220px] rounded-xl-24 overflow-hidden flex"
@@ -85,15 +116,15 @@ function FindPropertyCard() {
         </h3>
 
         <div className="flex flex-col gap-12">
-          {["Noida", "Greater Noida", "Gurugram"].map((location) => (
-            <a
-              key={location}
-              href={`#${location.toLowerCase().replace(" ", "-")}`}
-              className="group flex items-center gap-8 text-white text-md font-medium hover:opacity-80 transition-opacity w-fit hover:underline "
+          {cities.map((city) => (
+            <button
+              key={city.id}
+              onClick={() => handleCityClick(city.slug)}
+              className="group flex items-center gap-8 text-white text-md font-medium hover:opacity-80 transition-opacity w-fit hover:underline"
             >
-              {location}
-              <ArrowRight className="w-16 h-16 group-hover:translate-x-1 transition-transform " />
-            </a>
+              {city.name}
+              <ArrowRight className="w-16 h-16 group-hover:translate-x-1 transition-transform" />
+            </button>
           ))}
         </div>
       </div>

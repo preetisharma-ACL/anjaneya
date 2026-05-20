@@ -11,6 +11,11 @@ export const getCategories = async () => {
   return response.data;
 };
 
+export const getCities = async () => {
+  const response = await api.get(ENDPOINTS.CITIES); // add CITIES to your endpoints
+  return response.data;
+};
+
 export const getTestimonials = async () => {
   const response = await api.get(ENDPOINTS.TESTIMONIALS);
   return response.data;
