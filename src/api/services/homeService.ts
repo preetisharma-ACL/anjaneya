@@ -6,13 +6,17 @@ export const getHomeData = async () => {
   return response.data;
 };
 
+export const getSiteSettings = async () => {
+  const response = await api.get(ENDPOINTS.SITE_SETTINGS);
+  return response.data;
+};
 export const getCategories = async () => {
-  const response = await api.get(ENDPOINTS.CATEGORIES); // add CATEGORIES to your endpoints
+  const response = await api.get(ENDPOINTS.CATEGORIES); 
   return response.data;
 };
 
 export const getCities = async () => {
-  const response = await api.get(ENDPOINTS.CITIES); // add CITIES to your endpoints
+  const response = await api.get(ENDPOINTS.CITIES); 
   return response.data;
 };
 

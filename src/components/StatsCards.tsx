@@ -76,11 +76,9 @@ function FindPropertyCard() {
     const fetchCities = async () => {
       try {
         const data = await getCities();
-        // Take only the first 3 cities
         setCities(data.results.slice(0, 3));
       } catch (err) {
         console.error("Failed to fetch cities:", err);
-        // Fallback to empty — card will simply show no links
         setCities([]);
       }
     };
@@ -88,7 +86,6 @@ function FindPropertyCard() {
   }, []);
 
   const handleCityClick = (slug: string) => {
-    // Navigate to /projects with city query param only (no category param)
     navigate(`/projects?city=${slug}`);
   };
 

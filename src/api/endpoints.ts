@@ -9,4 +9,5 @@ export const ENDPOINTS = {
   TESTIMONIALS: "/v1/testimonials",
   CATEGORIES: "/v1/categories",
   ENQUIRIES: "/v1/enquiries/",
+  SITE_SETTINGS: "/v1/site/settings",
 };
