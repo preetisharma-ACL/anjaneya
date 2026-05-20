@@ -31,7 +31,7 @@ export function ContactBanner() {
             Book a free consultation and get matched with the right expert for
             your property goals.
           </p>
-
+          <a href="/contact" className="inline-block">
           <Button
             variant="primary"
             size="xl"
@@ -40,6 +40,7 @@ export function ContactBanner() {
             <span className="font-medium">Book a Free Consultation</span>
             <ArrowUpRight className="size-5 transition-transform duration-300 group-hover:rotate-45" />
           </Button>
+          </a>
         </div>
       </div>
     </section>
