@@ -10,4 +10,5 @@ export const ENDPOINTS = {
   CATEGORIES: "/v1/categories",
   ENQUIRIES: "/v1/enquiries/",
   SITE_SETTINGS: "/v1/site/settings",
+  FEATURED_PROJECTS: "/v1/projects/featured",
 };

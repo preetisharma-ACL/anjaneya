@@ -20,6 +20,11 @@ export const getCities = async () => {
   return response.data;
 };
 
+export const getFeaturedprojects = async () => {
+  const response = await api.get(ENDPOINTS.FEATURED_PROJECTS); 
+  return response.data;
+};
+
 export const getTestimonials = async () => {
   const response = await api.get(ENDPOINTS.TESTIMONIALS);
   return response.data;

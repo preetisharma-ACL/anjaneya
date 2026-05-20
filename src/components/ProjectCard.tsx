@@ -21,7 +21,7 @@ export function ProjectCard({ slug, category, title, location, tagline, image }:
         initial="rest"
         whileHover="hover"
         animate="rest"
-        className="relative w-full min-h-[410px] bg-surface-white rounded-xl-24 overflow-hidden transition-shadow duration-300 flex flex-col"
+        className="relative w-full min-h-[410px] h-full bg-surface-white rounded-xl-24 overflow-hidden transition-shadow duration-300 flex flex-col"
         style={{
           boxShadow:
             "0px 100px 80px 0px rgba(0, 0, 0, 0.02), 0px 64.81px 46.85px 0px rgba(0, 0, 0, 0.02), 0px 38.52px 25.48px 0px rgba(0, 0, 0, 0.01), 0px 20px 13px 0px rgba(0, 0, 0, 0.01), 0px 8.15px 6.52px 0px rgba(0, 0, 0, 0.01)",
@@ -64,7 +64,7 @@ export function ProjectCard({ slug, category, title, location, tagline, image }:
                 {location}
               </p>
 
-              <p className="text-tertiary text-sm font-normal leading-snug break-words">
+              <p className="text-tertiary text-sm font-normal leading-snug break-words line-clamp-3">
                 {tagline}
               </p>
             </div>
