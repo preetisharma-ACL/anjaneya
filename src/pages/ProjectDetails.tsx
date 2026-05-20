@@ -344,7 +344,7 @@ export function ProjectDetails() {
 
         {/* Stats Bar */}
         <div className="absolute bottom-0 left-0 w-full bg-primary/40 backdrop-blur-[10px] py-24 lg:py-0">
-          <div className="max-w-[1200px] mx-auto lg:h-120 px-24 lg:px-40 grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:justify-between items-center gap-24 lg:gap-0">
+          <div className=" mx-auto px-24 sm:px-48 lg:px-120 lg:h-120 px-24  grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:justify-between items-center gap-24 lg:gap-0">
             {statsBar.map((stat, index) => (
               <div key={index} className="flex flex-col">
                 <span className="text-white/60 text-[9px] lg:text-[10px] uppercase tracking-wider">
@@ -470,20 +470,16 @@ export function ProjectDetails() {
               <div className="flex flex-col gap-16">
                 <div className="flex items-center gap-16">
                   {project.developer.logo && (
-                    <img
-                      src={project.developer.logo}
-                      alt={project.developer.name}
-                      className="h-48 object-contain"
-                    />
-                  )}
-                  {project.developer.website && (
                     <a
-                      href={project.developer.website as string}
+                      href={project.developer.website || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-surface-primary text-sm hover:underline"
                     >
-                      {project.developer.website}
+                      <img
+                        src={project.developer.logo}
+                        alt={project.developer.name}
+                        className="h-48 object-contain cursor-pointer"
+                      />
                     </a>
                   )}
                 </div>
@@ -536,9 +532,9 @@ export function ProjectDetails() {
       </div>
 
       {/* ── Gallery ── */}
-      <section className="pt-24 pb-80">
-        <div className="flex flex-col gap-24">
-          <div className="max-w-[1300px] mx-auto px-40 w-full text-left">
+      <section className="pt-24 pb-80 ">
+        <div className="max-w-[1200px] mx-auto px-40 flex flex-col gap-24">
+          <div className="w-full text-left">
             <h4 className="font-headline text-2xl font-normal text-primary">
               Project Gallery
             </h4>
@@ -551,11 +547,10 @@ export function ProjectDetails() {
             onPointerUp={stopCarouselDrag}
             onPointerCancel={stopCarouselDrag}
             onPointerLeave={stopCarouselDrag}
-            className={`max-w-[1300px] mx-auto w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${
-              isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
-            }`}
+            className={`w-full overflow-x-auto overflow-y-hidden no-scrollbar select-none ${isCarouselDragging ? "cursor-grabbing" : "cursor-grab"
+              }`}
           >
-            <div className="flex w-max px-40 gap-16">
+            <div className="flex w-max gap-16">
               {galleryImages.map((img, index) => (
                 <div
                   key={index}
