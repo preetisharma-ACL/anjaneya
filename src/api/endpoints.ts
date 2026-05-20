@@ -6,4 +6,5 @@ export const ENDPOINTS = {
   CONTACT: "/v1/contact",
   TEAM: "/v1/team",
   TESTIMONIALS: "/v1/testimonials",
+  CATEGORIES: "/v1/categories",
 };

@@ -6,7 +6,13 @@ export const getHomeData = async () => {
   return response.data;
 };
 
+export const getCategories = async () => {
+  const response = await api.get(ENDPOINTS.CATEGORIES); // add CATEGORIES to your endpoints
+  return response.data;
+};
+
 export const getTestimonials = async () => {
   const response = await api.get(ENDPOINTS.TESTIMONIALS);
   return response.data;
 };
+
