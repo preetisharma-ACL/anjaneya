@@ -17,20 +17,20 @@ const SocialIcons = {
       <circle cx="4" cy="4" r="2" />
     </svg>
   ),
-  Youtube: (props: React.SVGProps<SVGSVGElement>) => (
-    <svg
-      {...props}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z" />
-      <path d="m10 15 5-3-5-3z" />
-    </svg>
-  ),
+//   Youtube: (props: React.SVGProps<SVGSVGElement>) => (
+//     <svg
+//       {...props}
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     >
+//       <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z" />
+//       <path d="m10 15 5-3-5-3z" />
+//     </svg>
+//   ),
 };
 
 interface TeamMemberCardProps {
@@ -39,11 +39,11 @@ interface TeamMemberCardProps {
 }
 
 // Shared YouTube channel URL — override per member if the API provides one
-const DEFAULT_YOUTUBE_URL = "https://www.youtube.com/@RohitfromAnjaneyaGlobalRealty";
+// const DEFAULT_YOUTUBE_URL = "https://www.youtube.com/@RohitfromAnjaneyaGlobalRealty";
 
 export function TeamMemberCard({ member, isLast }: TeamMemberCardProps) {
   const photoSrc = member.photo ?? fallbackImg;
-  const youtubeUrl = member.youtube_url ?? DEFAULT_YOUTUBE_URL;
+//   const youtubeUrl = member.youtube_url ?? DEFAULT_YOUTUBE_URL;
 
   // Split bio into paragraphs on newlines, or show as single paragraph
   const bioParagraphs = member.bio
