@@ -306,8 +306,9 @@ export function ProjectDetails() {
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
 
-        <div className="relative z-10 w-full h-full flex flex-col justify-center px-24 sm:px-48 lg:px-120 pt-120 pb-50 lg:pb-80">
-          <div className="max-w-[700px] flex flex-col gap-24 lg:gap-32 mb-96">
+        <div className="relative z-10 w-full h-full flex flex-col justify-between pt-120 pb-0">
+          {/* Hero Content */}
+          <div className="max-w-[1200px] w-full mx-auto px-40 flex flex-col gap-24 lg:gap-32 pb-96">
             <div className="flex flex-col gap-12 lg:gap-16">
               <div className="flex items-center gap-12">
                 <span className="text-white text-[10px] lg:text-xs font-medium uppercase tracking-[0.2em]">
@@ -330,8 +331,9 @@ export function ProjectDetails() {
             </p>
           </div>
 
+          {/* RERA Badge */}
           {project.rera_number && (
-            <div className="flex justify-end">
+            <div className="max-w-[1200px] w-full mx-auto px-40 flex justify-end lg:pb-44 pb-50">
               <div className="bg-[#00D100] px-12 py-8 rounded-full flex items-center gap-8 shadow-lg">
                 <CheckCircle2 className="size-16 lg:size-5 text-white fill-white/20" />
                 <span className="text-white text-[10px] lg:text-xs font-bold tracking-wider">
@@ -344,7 +346,7 @@ export function ProjectDetails() {
 
         {/* Stats Bar */}
         <div className="absolute bottom-0 left-0 w-full bg-primary/40 backdrop-blur-[10px] py-24 lg:py-0">
-          <div className=" mx-auto px-24 sm:px-48 lg:px-120 lg:h-120 px-24  grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:justify-between items-center gap-24 lg:gap-0">
+          <div className="max-w-[1200px] mx-auto px-40 lg:h-120 grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-row lg:justify-between items-center gap-24 lg:gap-0">
             {statsBar.map((stat, index) => (
               <div key={index} className="flex flex-col">
                 <span className="text-white/60 text-[9px] lg:text-[10px] uppercase tracking-wider">
