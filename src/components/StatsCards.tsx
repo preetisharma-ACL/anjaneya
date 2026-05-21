@@ -4,6 +4,8 @@ import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import buildingBg from "@/assets/building-bg.png";
 import { getCities } from "@/api/services/homeService";
+import { getSiteSettings } from "@/api/services/homeService";
+
 interface StatCardProps {
   title: string;
   subtitle: string;
@@ -14,6 +16,13 @@ interface City {
   name: string;
   slug: string;
   display_order: number;
+}
+
+interface SiteSettings {
+  hero_stat_clients: string;
+  hero_stat_clients_label: string;
+  hero_stat_value:string;
+  hero_stat_value_label: string;
 }
 
 function AnimatedStatCard({ title, subtitle }: StatCardProps) {
@@ -130,17 +139,32 @@ function FindPropertyCard() {
 }
 
 export function StatsCards() {
+  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
+  
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const data = await getSiteSettings();
+        setSiteSettings(data);
+      }
+      catch (err) {
+        console.error("Failed to fetch site settings:", err);
+        setSiteSettings(null);
+      }
+    };
+    fetchSiteSettings();
+  }, []);
   return (
     <section className="w-full relative z-20 mt-[-110px] pb-80">
       <div className="max-w-[1440px] mx-auto px-24 sm:px-48 md:px-[153px]">
         <div className="flex flex-col xl:flex-row items-center xl:justify-between gap-24 xl:gap-16">
           <AnimatedStatCard
-            title="1500+"
-            subtitle="Happy clients, countless smiles delivered"
+            title={siteSettings?.hero_stat_clients || "1500+"}
+            subtitle={siteSettings?.hero_stat_clients_label || "Happy clients, countless smiles delivered"}
           />
           <AnimatedStatCard
-            title="500Cr+"
-            subtitle="Property value managed with excellence"
+            title={siteSettings?.hero_stat_value || "500Cr+"}
+            subtitle={siteSettings?.hero_stat_value_label || "Property value managed with excellence"}
           />
           <FindPropertyCard />
         </div>

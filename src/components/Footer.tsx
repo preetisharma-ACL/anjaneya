@@ -281,13 +281,6 @@ export function Footer() {
             >
               Terms & Conditions
             </Link>
-
-            <Link
-              to="/disclaimer"
-              className="text-negative opacity-50 hover:text-surface-primary transition-colors"
-            >
-              Disclaimer
-            </Link>
           </div>
         </div>
       </div>
