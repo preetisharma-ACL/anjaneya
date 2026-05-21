@@ -270,14 +270,28 @@ export function ProjectDetails() {
   // ---- Derived data ----
   const statsBar = [
     { label: "Property Status", value: formatStatus(project.status) },
+
     { label: "Property Type", value: project.property_type },
+
     project.price_starting_lacs
-      ? { label: "Price Starts from", value: `${project.price_starting_lacs} Lacs*` }
+      ? {
+        label: "Price Starts from",
+        value: `${project.price_starting_lacs} ${project.price_display || ""}`,
+      }
       : project.price_display
-        ? { label: "Price", value: project.price_display }
+        ? {
+          label: "Price",
+          value: project.price_display,
+        }
         : null,
-    project.size_display ? { label: "Sizes", value: project.size_display } : null,
-    project.developer ? { label: "Developer", value: project.developer.name } : null,
+
+    project.size_display
+      ? { label: "Sizes", value: project.size_display }
+      : null,
+
+    project.developer
+      ? { label: "Developer", value: project.developer.name }
+      : null,
   ].filter(Boolean) as { label: string; value: string }[];
 
   const galleryImages =
